@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Data</title>
+</head>
+<body>
+    <h2>Data from the Database</h2>
+    <table border="1">
+        <tr>
+	  {% for name in col_name %}
+            <th> {{ name }} </th>
+          {% endfor %}
+        </tr>
+        {% for row in data %}
+            <tr>
+		{% for i in row %}
+                <td>{{ i }}</td>
+                <!-- Add more columns based on your query -->
+		{% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <label for="selectOptions">Select an option:</label>
+    <select id="selectOptions"></select>
+    <button onclick="addToArray2()">Add</button>
+
+    <div>
+        <h3>Order by:</h3>
+        <div id="array2Buttons"></div>
+    </div>
+
+    <form action="/CerintaA/display_data" method="post" id="array2Form">
+        <input type="hidden" name="array2Data" id="array2Data">
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        // Sample arrays
+        let array1 = {{ col_name | tojson }};
+        let array2 = [];
+
+        // Function to populate the select options
+        function populateSelectOptions() {
+            let selectOptions = document.getElementById("selectOptions");
+
+            // Clear existing options
+            selectOptions.innerHTML = "";
+
+            // Populate options from array1
+            array1.forEach(option => {
+                let optionElement = document.createElement("option");
+                optionElement.text = option;
+                selectOptions.add(optionElement);
+            });
+        }
+
+        // Function to add selected option to array2 and remove it from array1
+        function addToArray2() {
+            let selectOptions = document.getElementById("selectOptions");
+            let selectedOption = selectOptions.value;
+
+            if (selectedOption) {
+                // Add to array2
+                array2.push(selectedOption);
+
+                // Remove from array1
+                array1 = array1.filter(option => option !== selectedOption);
+
+                // Update the select options and array2 buttons
+                populateSelectOptions();
+                displayArray2Buttons();
+            }
+        }
+
+        // Function to display buttons for elements in array2
+        function displayArray2Buttons() {
+            let array2ButtonsDiv = document.getElementById("array2Buttons");
+            array2ButtonsDiv.innerHTML = "";
+
+            array2.forEach(element => {
+                let button = document.createElement("button");
+                button.textContent = element;
+                button.onclick = function() {
+                    removeFromArray2(element);
+                };
+
+                array2ButtonsDiv.appendChild(button);
+            });
+        }
+
+        // Function to remove an element from array2 and add it back to array1
+        function removeFromArray2(element) {
+            // Remove from array2
+            array2 = array2.filter(item => item !== element);
+
+            // Add back to array1
+            array1.push(element);
+
+            // Update the select options and array2 buttons
+            populateSelectOptions();
+            displayArray2Buttons();
+        }
+
+        function updateHiddenInput() {
+            let array2DataInput = document.getElementById("array2Data");
+            array2DataInput.value = JSON.stringify(array2);
+        }
+
+        // Attach the updateHiddenInput function to the form's onsubmit event
+        document.getElementById("array2Form").onsubmit = updateHiddenInput;
+
+        // Initial setup
+        populateSelectOptions();
+        displayArray2Buttons();
+    </script>
+
+</body>
+</html>
+

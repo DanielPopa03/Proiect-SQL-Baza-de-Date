@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerinta A</title>
+</head>
+<body>
+    <form id = "form" action = "CerintaB.html/{{ tabel }}/edit " method="post">
+        <label for="selected_option">Select an option:</label>
+        <select id="selected_option" name="selected_option">
+                {% for option in options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+        </select>
+        <button id = "edit" type = "submit">Edit</button>
+    </form>
+    <form id = "del", method="post">
+        <input type="hidden" name="array2Data" id="array2Data">
+        <button id = "delete" type="submit">Delete</button>
+    </form>
+    <script>
+        function deleteElement() {
+            let selectOptions = document.getElementById("selected_option");
+            let selectedOption = selectOptions.value;
+            let array2DataInput = document.getElementById("array2Data");
+            array2DataInput.value = JSON.stringify(selectedOption);
+        }
+
+        document.getElementById("del").onsubmit = deleteElement;
+    </script>
+</body>
+</html>

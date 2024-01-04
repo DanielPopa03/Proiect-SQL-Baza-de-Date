@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array Manipulation</title>
+    <style>
+        /* Optional: Add some basic styling */
+        button {
+            margin: 5px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Array Manipulation</h2>
+
+    <label for="selectOptions">Select an option:</label>
+    <select id="selectOptions"></select>
+    <button onclick="addToArray2()">Add</button>
+
+    <div>
+        <h3>Array 2:</h3>
+        <div id="array2Buttons"></div>
+    </div>
+
+    <script>
+        // Sample arrays
+        let array1 = ["Option 1", "Option 2", "Option 3", "Option 4"];
+        let array2 = [];
+
+        // Function to populate the select options
+        function populateSelectOptions() {
+            let selectOptions = document.getElementById("selectOptions");
+
+            // Clear existing options
+            selectOptions.innerHTML = "";
+
+            // Populate options from array1
+            array1.forEach(option => {
+                let optionElement = document.createElement("option");
+                optionElement.text = option;
+                selectOptions.add(optionElement);
+            });
+        }
+
+        // Function to add selected option to array2 and remove it from array1
+        function addToArray2() {
+            let selectOptions = document.getElementById("selectOptions");
+            let selectedOption = selectOptions.value;
+
+            if (selectedOption) {
+                // Add to array2
+                array2.push(selectedOption);
+
+                // Remove from array1
+                array1 = array1.filter(option => option !== selectedOption);
+
+                // Update the select options and array2 buttons
+                populateSelectOptions();
+                displayArray2Buttons();
+            }
+        }
+
+        // Function to display buttons for elements in array2
+        function displayArray2Buttons() {
+            let array2ButtonsDiv = document.getElementById("array2Buttons");
+            array2ButtonsDiv.innerHTML = "";
+
+            array2.forEach(element => {
+                let button = document.createElement("button");
+                button.textContent = element;
+                button.onclick = function() {
+                    removeFromArray2(element);
+                };
+
+                array2ButtonsDiv.appendChild(button);
+            });
+        }
+
+        // Function to remove an element from array2 and add it back to array1
+        function removeFromArray2(element) {
+            // Remove from array2
+            array2 = array2.filter(item => item !== element);
+
+            // Add back to array1
+            array1.push(element);
+
+            // Update the select options and array2 buttons
+            populateSelectOptions();
+            displayArray2Buttons();
+        }
+
+        // Initial setup
+        populateSelectOptions();
+        displayArray2Buttons();
+    </script>
+
+</body>
+</html>
